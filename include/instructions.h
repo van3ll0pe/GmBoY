@@ -73,4 +73,12 @@ extern void LDI_mem_HL_A(Cpu_t* cpu, uint8_t* memory);
 extern void LDD_A_mem_HL(Cpu_t* cpu, uint8_t* memory);
 extern void LDD_mem_HL_A(Cpu_t* cpu, uint8_t* memory);
 
+/************ 16bits load ***************/
+
+extern void LD_r16_d16(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low, uint8_t* memory);
+extern void LD_a16_SP(Cpu_t* cpu, uint8_t* memory);
+extern void LD_SP_HL(Cpu_t* cpu);
+extern void PUSH_r16(Cpu_t* cpu,uint8_t* registre_high, uint8_t* registre_low, uint8_t* memory);
+extern void POP_r16(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low, uint8_t* memory);
+
 #endif //__INSTRUCTIONS_H__

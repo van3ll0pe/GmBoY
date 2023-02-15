@@ -91,10 +91,26 @@ PUSH_r16(Cpu_t* cpu,uint8_t* registre_high, uint8_t* registre_low, uint8_t* memo
     cpu->PC++;
 }
 
+/**
+ * @brief POP r16
+ * 
+ * @param cpu 
+ * @param registre_high 
+ * @param registre_low 
+ * @param memory 
+ */
 void
-POP_r16
-(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low, uint8_t* memory)
+POP_r16(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low, uint8_t* memory)
 {
+    if (!cpu || !registre_high || !registre_low || !memory)
+        return;
     
+    *registre_low = memory[cpu->SP++];
+    *registre_high = memory[cpu->SP++];
+    
+    //FLAGS NOT CHANGED
+
+    cpu->timer = 12;
+    cpu->PC++;
 }
 
