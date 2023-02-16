@@ -76,9 +76,28 @@ extern void LDD_mem_HL_A(Cpu_t* cpu, uint8_t* memory);
 /************ 16bits load ***************/
 
 extern void LD_r16_d16(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low, uint8_t* memory);
+extern void LD_SP_d16(Cpu_t* cpu, uint8_t* memory);
+
 extern void LD_a16_SP(Cpu_t* cpu, uint8_t* memory);
+
 extern void LD_SP_HL(Cpu_t* cpu);
+
 extern void PUSH_r16(Cpu_t* cpu,uint8_t* registre_high, uint8_t* registre_low, uint8_t* memory);
 extern void POP_r16(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low, uint8_t* memory);
+
+/************ 16bits arithmetic / logic ***************/
+
+extern void ADD_HL_r16(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low);
+extern void ADD_HL_SP(Cpu_t* cpu);
+
+extern void INC_r16(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low);
+extern void INC_SP(Cpu_t* cpu);
+
+extern void DEC_r16(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low);
+extern void DEC_SP(Cpu_t* cpu);
+
+extern void ADD_SP_dd(Cpu_t* cpu, uint8_t* memory);
+extern void LD_HL_SP_dd(Cpu_t* cpu, uint8_t* memory);
+
 
 #endif //__INSTRUCTIONS_H__

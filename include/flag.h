@@ -124,4 +124,24 @@ extern void CPU_set_flag_DEC_8(Cpu_t* cpu, uint8_t value1);
  */
 extern void CPU_set_flag_CPL(Cpu_t* cpu);
 
+/**
+ * @brief SET FLAG ADD HL, r16
+ * -0HC
+ * 
+ * @param cpu 
+ * @param value1 
+ * @param value2 
+ */
+extern void CPU_set_flag_ADD_16bits_HL(Cpu_t* cpu, uint16_t value1, uint16_t value2);
+
+/**
+ * @brief ADD SP, e / LD HL, SP + r8
+ * 00HC
+ * 
+ * @param cpu 
+ * @param value1 
+ * @param value2 
+ */
+extern void CPU_set_flag_ADD_SP_dd(Cpu_t* cpu, uint16_t value1, int8_t value2);
+
 #endif //FLAG_H

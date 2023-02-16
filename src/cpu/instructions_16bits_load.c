@@ -31,6 +31,28 @@ LD_r16_d16(Cpu_t* cpu, uint8_t* registre_high, uint8_t* registre_low, uint8_t* m
 }
 
 /**
+ * @brief LD SP, d16
+ * 
+ * @param cpu 
+ * @param memory 
+ */
+void
+LD_SP_d16(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    uint16_t imediate_data = CPU_get_little_endian_data16bits(cpu, memory);
+
+    //FLAG NOT CHANGED
+
+    cpu->SP = imediate_data;
+    
+    cpu->timer = 12;
+    cpu->PC += 3;
+}
+
+/**
  * @brief LD (a16), SP
  * 
  * @param cpu 

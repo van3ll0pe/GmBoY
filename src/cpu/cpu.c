@@ -42,7 +42,7 @@ CPU_destroy(Cpu_t* cpu)
 }
 
 /**
- * @brief get imediate_data 16bits in little endian
+ * @brief get imediate_data 16bits in little endian to the good way
  * If there is error -> exit
  * else returns the 16bits value.
  * 

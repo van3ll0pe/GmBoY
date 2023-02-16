@@ -315,3 +315,53 @@ CPU_set_flag_CPL(Cpu_t* cpu)
     //CARRY FLAG
     //NOT CHANGED
 }
+
+void
+CPU_set_flag_ADD_16bits_HL(Cpu_t* cpu, uint16_t value1, uint16_t value2)
+{
+    if (!cpu)
+        return;
+    
+    //ZERO FLAG
+    //NOT CHANGED
+
+    //SUB FLAG
+    cpu->F = cpu->F & (~SUB_FLAG);
+
+    //HALF CARRY FLAG
+    if (((value1 & 0xFFF)) + ((value2 & 0xFFF)) & 0x1000)
+        cpu->F = cpu->F | HALF_FLAG;
+    else
+        cpu->F = cpu->F & (~HALF_FLAG);
+    
+    //CARRY FLAG
+    if ((value1 + value2) & 0x10000)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
+}
+
+void
+CPU_set_flag_ADD_SP_dd(Cpu_t* cpu, uint16_t value1, int8_t value2)
+{
+    if (!cpu)
+        return;
+    
+    //ZERO FLAG
+    cpu->F = cpu->F & (~ZERO_FLAG);
+
+    //SUB FLAG
+    cpu->F = cpu->F & (~SUB_FLAG);
+
+    //HALF CARRY FLAG
+    if (((value1 & 0xF) + (value2 & 0xF)) & 0x10)
+        cpu->F = cpu->F | HALF_FLAG;
+    else
+        cpu->F = cpu->F & (~HALF_FLAG);
+    
+    //CARRY FLAG
+    if (((value1 & 0xFF) + value2) & 0x100)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
+}
