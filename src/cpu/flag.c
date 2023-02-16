@@ -365,3 +365,27 @@ CPU_set_flag_ADD_SP_dd(Cpu_t* cpu, uint16_t value1, int8_t value2)
     else
         cpu->F = cpu->F & (~CARRY_FLAG);
 }
+
+/**
+ * @brief FLAG to RLCA, RLA, RRCA, RRA
+ * 
+ * @param cpu 
+ */
+void
+CPU_set_flag_rotate_A(Cpu_t* cpu)
+{
+    if (!cpu)
+        return;
+    
+    //ZERO FLAG
+    cpu->F = cpu->F & (~ZERO_FLAG);
+
+    //SUB FLAG
+    cpu->F = cpu->F & (~SUB_FLAG);
+
+    //HALF CARRY FLAG
+    cpu->F = cpu->F & (~HALF_FLAG);
+
+    //CARRY FLAG
+    //CHECK on function
+}
