@@ -145,10 +145,18 @@ extern void CPU_set_flag_ADD_16bits_HL(Cpu_t* cpu, uint16_t value1, uint16_t val
 extern void CPU_set_flag_ADD_SP_dd(Cpu_t* cpu, uint16_t value1, int8_t value2);
 
 /**
- * @brief RRA, RRCA, RLA, RLCA
+ * @brief FLAG to RLCA, RLA, RRCA, RRA
  * 
  * @param cpu 
  */
 extern void CPU_set_flag_rotate_A(Cpu_t* cpu);
+
+/**
+ * @brief FLAG to RLC, RRC, RL, RR
+ * 
+ * @param cpu 
+ * @param value 
+ */
+extern void CPU_set_flag_rotate(Cpu_t* cpu, uint8_t value);
 
 #endif //FLAG_H

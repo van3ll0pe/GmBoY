@@ -133,3 +133,57 @@ RRA(Cpu_t* cpu)
     cpu->PC++;
 }
 
+void
+RLC_r8(Cpu_t* cpu, uint8_t* registre)
+{
+    if (!cpu || !registre)
+        return;
+    
+    uint8_t save_7bit = (*registre & 0b10000000) >> 7;
+
+    *registre <<= 1;
+
+    if (save_7bit)
+    {
+        cpu->F = cpu->F | CARRY_FLAG;
+        *registre = *registre | 0b00000001;
+    }
+    else
+    {
+        cpu->F = cpu->F & (~CARRY_FLAG);
+        *registre = *registre & (~0b00000001);
+    }
+
+    CPU_set_flag_rotate(cpu, *registre);
+
+    cpu->timer = 8;
+    cpu->PC++;
+}
+
+void
+RRC_r8(Cpu_t* cpu, uint8_t* registre)
+{
+    if (!cpu || !registre)
+        return;
+    
+    uint8_t save_0bit = (*registre & 0b00000001);
+
+    *registre >>= 1;
+
+    if (save_0bit)
+    {
+        cpu->F = cpu->F | CARRY_FLAG;
+        *registre = *registre | 0b100000000;
+    }
+    else
+    {
+        cpu->F = cpu->F & (~CARRY_FLAG);
+        *registre = *registre & (~0b100000000);
+    }
+
+    CPU_set_flag_rotate(cpu, *registre);
+
+    cpu->timer = 8;
+    cpu->PC++;
+}
+
