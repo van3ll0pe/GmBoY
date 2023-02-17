@@ -15,19 +15,19 @@ RLCA(Cpu_t* cpu)
     if (!cpu)
         return;
     
-    uint8_t save_7bit = (cpu->A & 0b10000000) >> 7; //0 ou 1
+    uint8_t last_bit = (cpu->A & LAST_BIT);
 
     cpu->A <<= 1;
 
-    if (save_7bit)
+    if (last_bit)
     {
         cpu->F = cpu->F | CARRY_FLAG;
-        cpu->A = cpu->A | 0b00000001;
+        cpu->A = cpu->A | FIRST_BIT;
     }
     else
     {
         cpu->F = cpu->F & (~CARRY_FLAG);
-        cpu->A = cpu->A & (~0b00000001);
+        cpu->A = cpu->A & (~FIRST_BIT);
     }
     
     CPU_set_flag_rotate_A(cpu);
@@ -48,19 +48,19 @@ RLA(Cpu_t* cpu)
     if (!cpu)
         return;
 
-    uint8_t save_7bit = (cpu->A & 0b10000000) >> 7; //0 ou 1
-    uint8_t C = (cpu->F & CARRY_FLAG) >> 4; //0 ou 1
+    uint8_t last_bit = (cpu->A & LAST_BIT);
+    uint8_t C = (cpu->F & CARRY_FLAG);
 
     cpu->A <<= 1;
 
     //SET THE 0th bit of A by the CARRY FLAG
     if (C)
-        cpu->A = cpu->A | 0b00000001;
+        cpu->A = cpu->A | FIRST_BIT;
     else
-        cpu->A = cpu->A & (~0b00000001);
+        cpu->A = cpu->A & (~FIRST_BIT);
     
     //SET THE CARRY FLAG by the 7th bit of A
-    if (save_7bit)
+    if (last_bit)
         cpu->F = cpu->F | CARRY_FLAG;
     else
         cpu->F = cpu->F & (~CARRY_FLAG);
@@ -83,19 +83,19 @@ RRCA(Cpu_t* cpu)
     if (!cpu)
         return;
     
-    uint8_t save_0bit = (cpu->A & 0b000000001); //0 ou 1
+    uint8_t first_bit = (cpu->A & FIRST_BIT);
 
     cpu->A >>= 1;
 
-    if (save_0bit)
+    if (first_bit)
     {
         cpu->F = cpu->F | CARRY_FLAG;
-        cpu->A = cpu->A | 0b10000000;
+        cpu->A = cpu->A | LAST_BIT;
     }
     else
     {
         cpu->F = cpu->F & (~CARRY_FLAG);
-        cpu->A = cpu->A & (~0b10000000);
+        cpu->A = cpu->A & (~LAST_BIT);
     }
 
     CPU_set_flag_rotate_A(cpu);
@@ -110,22 +110,22 @@ RRA(Cpu_t* cpu)
     if (!cpu)
         return;
     
-    uint8_t save_0bit = (cpu->A & 0b00000001); //0 ou 1
-    uint8_t C = (cpu->F & CARRY_FLAG) >> 4; //0 ou 1
+    uint8_t first_bit = (cpu->A & FIRST_BIT);
+    uint8_t C = (cpu->F & CARRY_FLAG);
 
     cpu->A >>= 1;
 
     //SET CARRY FLAG WITH VALUE OF 0th BIT
-    if (save_0bit)
+    if (first_bit)
         cpu->F = cpu->F | CARRY_FLAG;
     else
         cpu->F = cpu->F & (~CARRY_FLAG);
     
     //SET 7th BIT WITH VALUE OF CARRY FLAG
     if (C)
-        cpu->A = cpu->A | 0b10000000;
+        cpu->A = cpu->A | LAST_BIT;
     else
-        cpu->A = cpu->A & (~0b10000000);
+        cpu->A = cpu->A & (~LAST_BIT);
 
     CPU_set_flag_rotate_A(cpu);
 
@@ -139,19 +139,19 @@ RLC_r8(Cpu_t* cpu, uint8_t* registre)
     if (!cpu || !registre)
         return;
     
-    uint8_t save_7bit = (*registre & 0b10000000) >> 7;
+    uint8_t last_bit = (*registre & LAST_BIT);
 
     *registre <<= 1;
 
-    if (save_7bit)
+    if (last_bit)
     {
         cpu->F = cpu->F | CARRY_FLAG;
-        *registre = *registre | 0b00000001;
+        *registre = *registre | FIRST_BIT;
     }
     else
     {
         cpu->F = cpu->F & (~CARRY_FLAG);
-        *registre = *registre & (~0b00000001);
+        *registre = *registre & (~FIRST_BIT);
     }
 
     CPU_set_flag_rotate(cpu, *registre);
@@ -161,24 +161,57 @@ RLC_r8(Cpu_t* cpu, uint8_t* registre)
 }
 
 void
+RLC_mem_HL(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu ||!memory)
+        return;
+    
+    
+    uint8_t mem_HL = memory[(cpu->H << 8) + cpu->L];
+
+
+    uint8_t last_bit = (mem_HL & LAST_BIT);
+
+    mem_HL <<= 1;
+
+    if (last_bit)
+    {
+        cpu->F = cpu->F | CARRY_FLAG;
+        mem_HL = mem_HL | FIRST_BIT;
+    }
+    else
+    {
+        cpu->F = cpu->F & (~CARRY_FLAG);
+        mem_HL = mem_HL & (~FIRST_BIT);
+    }
+
+    CPU_set_flag_rotate(cpu, mem_HL);
+
+    memory[(cpu->H << 8) + cpu->L] = mem_HL;
+
+    cpu->timer = 16;
+    cpu->PC++;
+}
+
+void
 RRC_r8(Cpu_t* cpu, uint8_t* registre)
 {
     if (!cpu || !registre)
         return;
     
-    uint8_t save_0bit = (*registre & 0b00000001);
+    uint8_t first_bit = (*registre & FIRST_BIT);
 
     *registre >>= 1;
 
-    if (save_0bit)
+    if (first_bit)
     {
         cpu->F = cpu->F | CARRY_FLAG;
-        *registre = *registre | 0b100000000;
+        *registre = *registre | LAST_BIT;
     }
     else
     {
         cpu->F = cpu->F & (~CARRY_FLAG);
-        *registre = *registre & (~0b100000000);
+        *registre = *registre & (~LAST_BIT);
     }
 
     CPU_set_flag_rotate(cpu, *registre);
@@ -187,3 +220,157 @@ RRC_r8(Cpu_t* cpu, uint8_t* registre)
     cpu->PC++;
 }
 
+void
+RRC_mem_HL(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    uint8_t mem_HL = memory[(cpu->H << 8) + cpu->L];
+
+    uint8_t first_bit = (mem_HL & FIRST_BIT);
+
+    mem_HL >>= 1;
+
+    if (first_bit)
+    {
+        cpu->F = cpu->F | CARRY_FLAG;
+        mem_HL = mem_HL | LAST_BIT;
+    }
+    else
+    {
+        cpu->F = cpu->F & (~CARRY_FLAG);
+        mem_HL = mem_HL & (~LAST_BIT);
+    }
+
+    CPU_set_flag_rotate(cpu, mem_HL);
+
+    memory[(cpu->H << 8) + cpu->L] = mem_HL;
+
+    cpu->timer = 16;
+    cpu->PC++;
+}
+
+void
+RL_r8(Cpu_t* cpu, uint8_t* registre)
+{
+    if (!cpu || !registre)
+        return;
+    
+    uint8_t last_bit = (*registre & LAST_BIT);
+    uint8_t C = (cpu->F & CARRY_FLAG);
+
+    *registre <<= 1;
+
+    if (last_bit)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
+
+
+    if (C)
+        *registre = *registre | FIRST_BIT;
+    else
+        *registre = *registre & (~FIRST_BIT);
+    
+    CPU_set_flag_rotate(cpu, *registre);
+
+    cpu->timer = 8;
+    cpu->PC++;
+}
+
+void
+RL_mem_HL(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    uint8_t mem_HL = memory[(cpu->H << 8) + cpu->L];
+    uint8_t last_bit = (mem_HL & LAST_BIT);
+    uint8_t C = (cpu->F & CARRY_FLAG);
+
+    mem_HL <<= 1;
+
+    if (last_bit)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
+
+    if (C)
+        mem_HL = mem_HL | FIRST_BIT;
+    else
+        mem_HL = mem_HL & (~FIRST_BIT);
+    
+    CPU_set_flag_rotate(cpu, mem_HL);
+
+    memory[(cpu->H << 8) + cpu->L] = mem_HL;
+
+    cpu->timer = 16;
+    cpu->PC++;
+}
+
+void
+RR_r8(Cpu_t* cpu, uint8_t* registre)
+{
+    if (!cpu || !registre)
+        return;
+    
+    uint8_t first_bit = (*registre & FIRST_BIT);
+    uint8_t C = (cpu->F & CARRY_FLAG);
+
+    *registre >>= 1;
+
+    if (first_bit)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
+    
+    if (C)
+        *registre = *registre | LAST_BIT;
+    else
+        *registre = *registre & (~LAST_BIT);
+    
+    CPU_set_flag_rotate(cpu, *registre);
+
+    cpu->timer = 8;
+    cpu->PC++;
+}
+
+void
+RR_mem_HL(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    uint8_t mem_HL = memory[(cpu->H << 8) + cpu->L];
+    uint8_t first_bit = (mem_HL & FIRST_BIT);
+    uint8_t C = (cpu->F & CARRY_FLAG);
+
+    mem_HL >>= 1;
+
+    if (first_bit)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
+    
+    if (C)
+        mem_HL = mem_HL | LAST_BIT;
+    else
+        mem_HL = mem_HL & (~LAST_BIT);
+
+    CPU_set_flag_rotate(cpu, mem_HL);
+
+    memory[(cpu->H << 8) + cpu->L] = mem_HL;
+
+    cpu->timer = 16;
+    cpu->PC++;
+}
+
+void
+SLA_r8(Cpu_t* cpu, uint8_t* registre)
+{
+    if (!cpu || !registre)
+        return;
+    
+    
+}

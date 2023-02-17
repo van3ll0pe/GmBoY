@@ -3,6 +3,9 @@
 
 #include <stdatomic.h>
 
+#define LAST_BIT 0b10000000
+#define FIRST_BIT 0b00000001
+
 typedef struct Cpu_t{
     uint8_t A;
     uint8_t B;
