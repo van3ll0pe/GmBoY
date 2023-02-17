@@ -152,7 +152,7 @@ extern void CPU_set_flag_ADD_SP_dd(Cpu_t* cpu, uint16_t value1, int8_t value2);
 extern void CPU_set_flag_rotate_A(Cpu_t* cpu);
 
 /**
- * @brief FLAG to RLC, RRC, RL, RR
+ * @brief FLAG to RLC, RRC, RL, RR, SLA, SRA
  * 
  * @param cpu 
  * @param value 

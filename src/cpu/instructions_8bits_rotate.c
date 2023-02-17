@@ -372,5 +372,99 @@ SLA_r8(Cpu_t* cpu, uint8_t* registre)
     if (!cpu || !registre)
         return;
     
+    uint8_t last_bit = (*registre & LAST_BIT);
+
+    *registre <<= 1;
+
+    if (last_bit)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
     
+    //the 0 is automatic for the side bit, no need to put it on
+
+    CPU_set_flag_rotate(cpu, *registre);
+
+    cpu->timer = 8;
+    cpu->PC++;
+}
+
+void
+SLA_mem_HL(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    uint8_t mem_HL = memory[(cpu->H << 8) + cpu->L];
+    uint8_t last_bit = (mem_HL & LAST_BIT);
+
+    mem_HL <<= 1;
+
+    if (last_bit)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
+    
+    //the 0 is automatic for the side bit, no need to put it on
+
+    CPU_set_flag_rotate(cpu, mem_HL);
+
+    memory[(cpu->H << 8) + cpu->L] = mem_HL;
+
+    cpu->timer = 16;
+    cpu->PC++;
+}
+
+void
+SRA_r8(Cpu_t* cpu, uint8_t* registre)
+{
+    if (!cpu || !registre)
+        return;
+    
+    uint8_t first_bit = (*registre & FIRST_BIT);
+    uint8_t last_bit = (*registre & LAST_BIT);
+
+    *registre >>= 1;
+    
+    if (first_bit)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
+    
+    //put a 1 or stay 0 at the last bit
+    *registre = *registre | last_bit;
+    
+    CPU_set_flag_rotate(cpu, *registre);
+
+    cpu->timer = 8;
+    cpu->PC++;
+}
+
+void
+SRA_mem_HL(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    uint8_t mem_HL = memory[(cpu->H << 8) + cpu->L];
+
+    uint8_t first_bit = (mem_HL & FIRST_BIT);
+    uint8_t last_bit = (mem_HL & LAST_BIT);
+
+    mem_HL >>= 1;
+
+    if (first_bit)
+        cpu->F = cpu->F | CARRY_FLAG;
+    else
+        cpu->F = cpu->F & (~CARRY_FLAG);
+    
+    //put a 1 or stay 0 at the last bit
+    mem_HL = mem_HL | last_bit;
+
+    CPU_set_flag_rotate(cpu, mem_HL);
+
+    memory[(cpu->H << 8) + cpu->L] = mem_HL;
+
+    cpu->timer = 16;
+    cpu->PC++;
 }
