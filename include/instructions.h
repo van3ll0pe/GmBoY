@@ -99,5 +99,28 @@ extern void DEC_SP(Cpu_t* cpu);
 extern void ADD_SP_dd(Cpu_t* cpu, uint8_t* memory);
 extern void LD_HL_SP_dd(Cpu_t* cpu, uint8_t* memory);
 
+/************ 8bits rotate / shift ***************/
+
+extern void RLCA(Cpu_t* cpu);
+extern void RLA(Cpu_t* cpu);
+extern void RRCA(Cpu_t* cpu);
+extern void RRA(Cpu_t* cpu);
+
+extern void RLC_r8(Cpu_t* cpu, uint8_t* registre);
+extern void RLC_mem_HL(Cpu_t* cpu, uint8_t* memory);
+extern void RRC_r8(Cpu_t* cpu, uint8_t* registre);
+extern void RRC_mem_HL(Cpu_t* cpu, uint8_t* memory);
+extern void RL_r8(Cpu_t* cpu, uint8_t* registre);
+extern void RL_mem_HL(Cpu_t* cpu, uint8_t* memory);
+extern void RR_r8(Cpu_t* cpu, uint8_t* registre);
+extern void RR_mem_HL(Cpu_t* cpu, uint8_t* memory);
+extern void SLA_r8(Cpu_t* cpu, uint8_t* registre);
+extern void SLA_mem_HL(Cpu_t* cpu, uint8_t* memory);
+extern void SRA_r8(Cpu_t* cpu, uint8_t* registre);
+extern void SRA_mem_HL(Cpu_t* cpu, uint8_t* memory);
+extern void SRL_r8(Cpu_t* cpu, uint8_t* registre);
+extern void SRL_mem_HL(Cpu_t* cpu, uint8_t* memory);
+extern void SWAP_r8(Cpu_t* cpu, uint8_t* registre);
+extern void SWAP_mem_HL(Cpu_t* cpu, uint8_t* memory);
 
 #endif //__INSTRUCTIONS_H__
