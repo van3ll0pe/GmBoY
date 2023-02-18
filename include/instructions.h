@@ -108,19 +108,37 @@ extern void RRA(Cpu_t* cpu);
 
 extern void RLC_r8(Cpu_t* cpu, uint8_t* registre);
 extern void RLC_mem_HL(Cpu_t* cpu, uint8_t* memory);
+
 extern void RRC_r8(Cpu_t* cpu, uint8_t* registre);
 extern void RRC_mem_HL(Cpu_t* cpu, uint8_t* memory);
+
 extern void RL_r8(Cpu_t* cpu, uint8_t* registre);
 extern void RL_mem_HL(Cpu_t* cpu, uint8_t* memory);
+
 extern void RR_r8(Cpu_t* cpu, uint8_t* registre);
 extern void RR_mem_HL(Cpu_t* cpu, uint8_t* memory);
+
 extern void SLA_r8(Cpu_t* cpu, uint8_t* registre);
 extern void SLA_mem_HL(Cpu_t* cpu, uint8_t* memory);
+
 extern void SRA_r8(Cpu_t* cpu, uint8_t* registre);
 extern void SRA_mem_HL(Cpu_t* cpu, uint8_t* memory);
+
 extern void SRL_r8(Cpu_t* cpu, uint8_t* registre);
 extern void SRL_mem_HL(Cpu_t* cpu, uint8_t* memory);
+
 extern void SWAP_r8(Cpu_t* cpu, uint8_t* registre);
 extern void SWAP_mem_HL(Cpu_t* cpu, uint8_t* memory);
+
+/************ 8bits single Bit ***************/
+
+extern void BIT_r8(Cpu_t* cpu, uint8_t pos, uint8_t* registre);
+extern void BIT_mem_HL(Cpu_t* cpu, uint8_t pos, uint8_t* memory);
+
+extern void SET_r8(Cpu_t* cpu, uint8_t pos, uint8_t* registre);
+extern void SET_mem_HL(Cpu_t* cpu, uint8_t pos, uint8_t* memory);
+
+extern void RES_r8(Cpu_t* cpu, uint8_t pos, uint8_t* registre);
+extern void RES_mem_HL(Cpu_t* cpu, uint8_t pos, uint8_t* memory);
 
 #endif //__INSTRUCTIONS_H__

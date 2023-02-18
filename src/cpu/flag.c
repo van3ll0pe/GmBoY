@@ -429,3 +429,25 @@ CPU_set_flag_SWAP(Cpu_t* cpu, uint8_t value)
     //CARRY FLAG
     cpu->F = cpu->F & (~CARRY_FLAG);
 }
+
+void
+CPU_set_flag_BIT(Cpu_t* cpu, uint8_t value)
+{
+    if (!cpu)
+        return;
+    
+    //ZERO FLAG
+    if (value == 0)
+        cpu->F = cpu->F | ZERO_FLAG;
+    else
+        cpu->F = cpu->F & (~ZERO_FLAG);
+    
+    //SUB FLAG
+    cpu->F = cpu->F & (~SUB_FLAG);
+
+    //HALF CARRY FLAG
+    cpu->F = cpu->F | HALF_FLAG;
+
+    //CARRY FLAG
+    //NOT CHANGED
+}

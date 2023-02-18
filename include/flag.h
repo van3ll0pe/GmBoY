@@ -167,4 +167,12 @@ extern void CPU_set_flag_rotate(Cpu_t* cpu, uint8_t value);
  */
 extern void CPU_set_flag_SWAP(Cpu_t* cpu, uint8_t value);
 
+/**
+ * @brief SET FLAG BIT instruction
+ * 
+ * @param cpu 
+ * @param value 
+ */
+extern void CPU_set_flag_BIT(Cpu_t* cpu, uint8_t value);
+
 #endif //FLAG_H
