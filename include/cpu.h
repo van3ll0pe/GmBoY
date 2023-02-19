@@ -19,6 +19,8 @@ typedef struct Cpu_t{
     uint16_t PC;
     uint16_t SP;
 
+    uint8_t EMI;
+
     uint8_t timer;
 }Cpu_t;
 

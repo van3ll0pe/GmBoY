@@ -26,6 +26,8 @@ CPU_create(void)
     cpu->SP = 0;
     cpu->timer = 0;
 
+    cpu->EMI = 0;
+
     return cpu;
 }
 
