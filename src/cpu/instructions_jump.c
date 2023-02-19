@@ -225,7 +225,216 @@ CALL_a16(Cpu_t* cpu, uint8_t* memory)
 void
 CALL_NZ_a16(Cpu_t* cpu, uint8_t* memory)
 {
+    if (!cpu || !memory)
+        return;
     
+    //FLAGS NOT CHANGED
+
+    uint16_t a16 = CPU_get_little_endian_data16bits(cpu, memory);
+
+    cpu->PC += 3;
+
+    if ((cpu->F & ZERO_FLAG) == 0) //if ZERO FLAG is 0
+    {
+        memory[--cpu->SP] = (cpu->PC & 0xFF00) >> 8; //high 8bits of PC in the stack
+        memory[--cpu->SP] = (cpu->PC & 0x00FF);      //low 8bits of PC in the stack
+
+        cpu->timer = 24;
+        cpu->PC = a16;
+    }
+    else
+        cpu->timer = 12;
+        //PC is on the next opcode
 }
 
+void
+CALL_NC_a16(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
 
+    //FLAGS NOT CHANGED
+
+    uint16_t a16 = CPU_get_little_endian_data16bits(cpu, memory);
+
+    cpu->PC += 3;
+
+    if ((cpu->F & CARRY_FLAG) == 0) //if CARRY FLAG is 0
+    {
+        memory[--cpu->SP] = (cpu->PC & 0xFF00) >> 8;
+        memory[--cpu->SP] = (cpu->PC & 0x00FF);
+
+        cpu->timer = 24;
+        cpu->PC = a16;
+    }
+    else
+        cpu->timer = 12;
+        //PC is on the next opcode
+}
+
+void
+CALL_Z_a16(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    //FLAGS NOT CHANGED
+
+    uint16_t a16 = CPU_get_little_endian_data16bits(cpu, memory);
+
+    cpu->PC += 3;
+
+    if (cpu->F & ZERO_FLAG) //if ZERO FLAG is SET
+    {
+        memory[--cpu->SP] = (cpu->PC & 0xFF00) >> 8;
+        memory[--cpu->SP] = (cpu->PC & 0x00FF);
+
+        cpu->timer = 24;
+        cpu->PC = a16;
+    }
+    else
+        cpu->timer = 12;
+        //PC is on the next opcode
+}
+
+void
+CALL_C_a16(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    //FLAGS NOT CHANGED
+
+    uint16_t a16 = CPU_get_little_endian_data16bits(cpu, memory);
+
+    cpu->PC += 3; 
+
+    if (cpu->F & CARRY_FLAG) //if CARRY FLAG is SET
+    {
+        memory[--cpu->SP] = (cpu->PC & 0xFF00) >> 8;
+        memory[--cpu->SP] = (cpu->PC & 0x00FF);
+
+        cpu->timer = 24;
+        cpu->PC = a16;
+    }
+    else
+        cpu->timer = 12;
+        //PC is on the next opcode
+}
+
+void
+RET(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+
+    //FLAGS NOT CHANGED
+
+    uint8_t a16_low = memory[cpu->SP++];  //get low 8bits
+    uint8_t a16_high = memory[cpu->SP++]; //get high 8bits
+
+    cpu->timer = 16;
+    cpu->PC = (a16_high << 8) + a16_low; //PC = a16
+}
+
+void
+RETI(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+
+    cpu->EMI = 1;
+    RET(cpu, memory); //DO the RET
+}
+
+void
+RET_NZ(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    //FLAGS NOT CHANGED
+
+    if ((cpu->F & ZERO_FLAG) == 0) //if ZERO FLAG is reset
+    {
+        uint8_t a16_low = memory[cpu->SP++];  //get low 8bits
+        uint8_t a16_high = memory[cpu->SP++]; //get high 8bits
+
+        cpu->timer = 20;
+        cpu->PC = (a16_high << 8) + a16_low;
+    }
+    else
+    {
+        cpu->timer = 8;
+        cpu->PC++;
+    }
+}
+
+void
+RET_NC(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    //FLAGS NOT CHANGED
+
+    if ((cpu->F & CARRY_FLAG) == 0)
+    {
+        uint8_t a16_low = memory[cpu->SP++];  //get low 8bits
+        uint8_t a16_high = memory[cpu->SP++]; //get high 8bits
+
+        cpu->timer = 20;
+        cpu->PC = (a16_high << 8) + a16_low;
+    }
+    else
+    {
+        cpu->timer = 8;
+        cpu->PC++;
+    }
+}
+
+void
+RET_Z(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    //FLAGS NOT CHANGED
+
+    if (cpu->F & ZERO_FLAG)
+    {
+        uint8_t a16_low = memory[cpu->SP++];  //get low 8bits
+        uint8_t a16_high = memory[cpu->SP++]; //get high 8bits
+
+        cpu->timer = 20;
+        cpu->PC = (a16_high << 8) + a16_low;
+    }
+    else
+    {
+        cpu->timer = 8;
+        cpu->PC++;
+    }
+}
+
+void
+RET_C(Cpu_t* cpu, uint8_t* memory)
+{
+    if (!cpu || !memory)
+        return;
+    
+    //FLAGS NOT CHANGED
+
+    if (cpu->F & CARRY_FLAG)
+    {
+        uint8_t a16_low = memory[cpu->SP++];  //get low 8bits
+        uint8_t a16_high = memory[cpu->SP++]; //get high 8bits
+
+        cpu->timer = 20;
+        cpu->PC = (a16_high << 8) + a16_low;
+    }
+    else
+    {
+        cpu->timer = 8;
+        cpu->PC++;
+    }
+}
